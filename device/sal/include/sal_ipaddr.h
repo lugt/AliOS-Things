@@ -80,6 +80,7 @@ typedef struct _ip_addr {
 /** 255.255.255.255 */
 #define INADDR_BROADCAST    IPADDR_BROADCAST
 
+#define IPADDR_BROADCAST_STRING "255.255.255.255"
 
 in_addr_t ipaddr_addr(const char *cp);
 int ip4addr_aton(const char *cp, ip4_addr_t *addr);
@@ -88,10 +89,6 @@ char *ip4addr_ntoa(const ip4_addr_t *addr);
 #define inet_addr(cp) ipaddr_addr(cp)
 #define inet_aton(cp,addr) ip4addr_aton(cp,(ip4_addr_t*)addr)
 #define inet_ntoa(addr) ip4addr_ntoa((const ip4_addr_t*)&(addr))
-#define inet_ntop(af,src,dst,size) \
-    (((af) == AF_INET) ? ip4addr_ntoa_r((const ip4_addr_t*)(src),(dst),(size)) : NULL)
-#define inet_pton(af,src,dst) \
-    (((af) == AF_INET) ? ip4addr_aton((src),(ip4_addr_t*)(dst)) : 0)
 
 
 #ifdef __cplusplus

@@ -135,9 +135,9 @@ struct addrinfo {
 #define FD_SETSIZE    MEMP_NUM_NETCONN
 
 #define FDSETSAFESET(n, code) do { \
-  if (((n) - SAL_SOCKET_OFFSET < MEMP_NUM_NETCONN) && (((int)(n) - SAL_SOCKET_OFFSET) >= 0)) { \
+  if (((n) - SAL_SOCKET_OFFSET < MEMP_NUM_NETCONN *2) && (((int)(n) - SAL_SOCKET_OFFSET) >= 0)) { \
   code; }} while(0)
-#define FDSETSAFEGET(n, code) (((n) - SAL_SOCKET_OFFSET < MEMP_NUM_NETCONN) && (((int)(n) - SAL_SOCKET_OFFSET) >= 0) ?\
+#define FDSETSAFEGET(n, code) (((n) - SAL_SOCKET_OFFSET < MEMP_NUM_NETCONN *2) && (((int)(n) - SAL_SOCKET_OFFSET) >= 0) ?\
   (code) : 0)
 #define FD_SET(n, p)  FDSETSAFESET(n, (p)->fd_bits[((n)-SAL_SOCKET_OFFSET)/8] |=  (1 << (((n)-SAL_SOCKET_OFFSET) & 7)))
 #define FD_CLR(n, p)  FDSETSAFESET(n, (p)->fd_bits[((n)-SAL_SOCKET_OFFSET)/8] &= ~(1 << (((n)-SAL_SOCKET_OFFSET) & 7)))
@@ -159,6 +159,11 @@ typedef struct fd_set {
  */
 #define IP_ADD_MEMBERSHIP  3
 #define IP_DROP_MEMBERSHIP 4
+
+#define IP_MULTICAST_TTL   5
+#define IP_MULTICAST_IF    6
+#define IP_MULTICAST_LOOP  7
+
 
 typedef struct ip_mreq {
     struct in_addr imr_multiaddr; /* IP multicast address of group */
@@ -304,6 +309,14 @@ int sal_fcntl(int s, int cmd, int val);
        sal_getaddrinfo(nodname, servname, hints, res)
 
 #define fcntl(s,cmd,val)  sal_fcntl(s,cmd,val)
+
+
+
+#define inet_ntop(af,src,dst,size) \
+    (((af) == AF_INET) ? ip4addr_ntoa_r((const ip4_addr_t*)(src),(dst),(size)) : NULL)
+#define inet_pton(af,src,dst) \
+    (((af) == AF_INET) ? ip4addr_aton((src),(ip4_addr_t*)(dst)) : 0)
+    
 
 #ifdef __cplusplus
 }

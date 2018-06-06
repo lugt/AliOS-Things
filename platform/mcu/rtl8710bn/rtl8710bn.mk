@@ -141,13 +141,14 @@ GLOBAL_LDFLAGS += -L$(SOURCE_ROOT)/platform/mcu/rtl8710bn/lib/ -l_platform -l_wl
                   $(CLIB_LDFLAGS_NANO_FLOAT)
 
 GLOBAL_LDFLAGS += -mcpu=cortex-m4        \
-                  -mthumb -mthumb-interwork \
-                  -mlittle-endian \
+                  -mthumb\
+                  -Os \
                   -nostartfiles \
-                  --specs=nosys.specs \
                   -Wl,--no-enum-size-warning \
                   -Wl,--no-wchar-size-warning \
-                  $(CLIB_LDFLAGS_NANO_FLOAT)                  
+                  -Wl,--gc-sections \
+                  -Wl,--cref \
+                  $(CLIB_LDFLAGS_NANO_FLOAT)                 
 
 $(NAME)_CFLAGS  += -Wall -Werror -Wno-unused-variable -Wno-unused-parameter -Wno-implicit-function-declaration
 $(NAME)_CFLAGS  += -Wno-type-limits -Wno-sign-compare -Wno-pointer-sign -Wno-uninitialized
@@ -176,6 +177,8 @@ $(NAME)_SOURCES := aos/soc_impl.c          \
                    hal/hw.c  \
                    hal/wifi_port.c \
                    hal/ota_port.c \
+                   hal/wdg.c 
+		   
 #$(NAME)_SOURCES  += hal/uart.c
 #$(NAME)_SOURCES  += hal/flash.c
 #$(NAME)_SOURCES  += hal/hw.c
